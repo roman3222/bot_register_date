@@ -12,6 +12,8 @@ import time
 # from selenium.webdriver.chrome.service import Service
 # from dotenv import load_dotenv
 # from fake_useragent import UserAgent
+from DrissionPage import ChromiumPage, ChromiumOptions
+
 #
 # load_dotenv()
 #
@@ -86,28 +88,28 @@ import time
 #     driver.get(url=url)
 #     time.sleep(50)
 #
-    # login_input = WebDriverWait(driver, 10).until(
-    #     EC.presence_of_element_located((By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username'))
-    # )
-    # login_input.clear()
-    # login_input.send_keys(user_data['login'])
-    # time.sleep(3)
-    #
-    # # Явные ожидания для ожидания появления поля ввода пароля
-    # password_input = WebDriverWait(driver, 10).until(
-    #     EC.presence_of_element_located((By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password'))
-    # )
-    # password_input.clear()
-    # password_input.send_keys(user_data['password'])
-    # time.sleep(3)
-    #
-    # agree_button = driver.find_element(By.NAME, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
-    # agree_button.click()
-    # time.sleep(3)
-    #
-    # login_button = driver.find_element(By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:loginButton')
-    # login_button.click()
-    # time.sleep(30)
+# login_input = WebDriverWait(driver, 10).until(
+#     EC.presence_of_element_located((By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username'))
+# )
+# login_input.clear()
+# login_input.send_keys(user_data['login'])
+# time.sleep(3)
+#
+# # Явные ожидания для ожидания появления поля ввода пароля
+# password_input = WebDriverWait(driver, 10).until(
+#     EC.presence_of_element_located((By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password'))
+# )
+# password_input.clear()
+# password_input.send_keys(user_data['password'])
+# time.sleep(3)
+#
+# agree_button = driver.find_element(By.NAME, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
+# agree_button.click()
+# time.sleep(3)
+#
+# login_button = driver.find_element(By.ID, 'loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:loginButton')
+# login_button.click()
+# time.sleep(30)
 #
 #
 # def main():
@@ -118,5 +120,51 @@ import time
 #     main()
 
 
+# options = ChromiumOptions().auto_port()
 
+data = {}
 
+check_applicants = [
+    {'username': 'ola', 'applicants': 1},
+    {'username': 'lolo', 'applicants': 5},
+    {'username': 'lala', 'applicants': 3},
+    {'username': 'lilo', 'applicants': 3},
+    {'username': 'lala', 'applicants': 5}
+]
+
+check_applicants.sort(key=lambda k: k['applicants'])
+check_applicants.reverse()
+print(check_applicants)
+
+# username = check_applicants[0]['username']
+# username2 = check_applicants[1]['username']
+#
+#
+# def get_session():
+#     options = ChromiumOptions().auto_port()
+#
+#     data[username] = ChromiumPage(options)
+#     data[username2] = ChromiumPage(options)
+#     return data[username], data[username2]
+#
+#
+# def get_page():
+#     get_session()
+#     for key in data:
+#         if key == check_applicants[0]['username']:
+#             data[username].get('https://www.youtube.com/')
+#             return True
+#         else:
+#             return False
+#
+#
+# if get_page():
+#     check_applicants.pop(0)
+#     get_session()
+#     get_page()
+
+s = 'First Available Appointment Is Tuesday October 29 2024'
+
+lst = s.split(' ')
+print(lst[5])
+print(lst[6])

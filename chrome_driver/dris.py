@@ -2,7 +2,6 @@ import time
 import os
 import telebot
 import string
-import random
 from DrissionPage import ChromiumOptions, ChromiumPage
 from DrissionPage.errors import ElementNotFoundError
 from dotenv import load_dotenv
@@ -13,7 +12,9 @@ bot = telebot.TeleBot(os.getenv('token'))
 
 url = 'https://portal.ustraveldocs.com'
 
-driver = {}
+users = {}
+
+queue_users = []
 
 
 @bot.message_handler(commands=['start'])
@@ -31,25 +32,23 @@ def get_password(message):
 def get_date_range(message, user_data):
     user_data['password'] = message.text
     bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: March 1,10)')
+    bot.register_next_step_handler(message, def_get_username, user_data)
+
+
+def def_get_username(message, user_data):
+    user_data['date'] = message.text
+
+    bot.send_message(message.chat.id, 'Укажите никнейм пользователя')
+
+    bot.register_next_step_handler(message, get_applicants, user_data)
+
+
+def get_applicants(message, user_data):
+    global queue_users
+    bot.send_message(message.chat.id, 'Укажите колличество заявителей в аккаунте')
+    user_data['username'] = message.text
+
     bot.register_next_step_handler(message, record_in_date, user_data)
-
-
-def def_get_username(message):
-    global driver
-
-    driver['username'] = message.text
-
-
-def get_applicants(message):
-    global driver
-
-    driver['applicants'] = message.text
-
-
-
-def create_session():
-    # driver = ChromiumPage()
-    # return driver
 
 
 def input_authorization(driver, user_data):
@@ -118,8 +117,9 @@ def get_first_available_date(driver):
     give_date = driver.ele('@class:leftPanelText')
     time.sleep(4)
     date = give_date.text
-    date.replace(',', '')
-    print(date)
+    date = date.translate(str.maketrans('', '', string.punctuation))
+    date_list = date.split(' ')
+    return date_list
 
 
 def record_in_date(message, user_data):
@@ -129,26 +129,27 @@ def record_in_date(message, user_data):
     :param user_data:
     :return:
     """
+    global users
+    global queue_users
+
     start_time = time.time()
 
-    user_data['date'] = message.text
+    user_data['applicants'] = message.text
+    queue_users.append({'username': user_data['username'], 'applicants': user_data['applicants']})
+    username = user_data['username']
 
-    driver = create_session()
-
-    driver.get(url=url)
-    # driver.wait(1)
-
-    input_authorization(driver, user_data)
-
-    check_cloudflare(driver)
-
-    page_calendar(driver)
-
-    get_first_available_date(driver)
+    options = ChromiumOptions().auto_port()
+    users[username] = ChromiumPage(options)
+    users[username].get(url=url)  # Получаем страницу авторизации
+    input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
+    check_cloudflare(users[username])  # Проверка cloudflare
+    page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
+    get_first_available_date(users[username])  # Получаем информацию о ближайшей открытой дате
 
     end_time = time.time()
-
     print(start_time - end_time)
+    print(users)
+    print(queue_users)
 
 
 def main():
