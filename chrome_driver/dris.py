@@ -2,6 +2,7 @@ import time
 import os
 import telebot
 import string
+import re
 from DrissionPage import ChromiumOptions, ChromiumPage
 from DrissionPage.errors import ElementNotFoundError
 from dotenv import load_dotenv
@@ -16,6 +17,8 @@ users = {}
 
 queue_users = []
 
+date_for_users = {}
+
 
 @bot.message_handler(commands=['start'])
 def get_login(message):
@@ -24,6 +27,7 @@ def get_login(message):
 
 
 def get_password(message):
+    print(message.text)
     user_data = {'login': message.text}
     bot.send_message(message.chat.id, f'Укажите пароль')
     bot.register_next_step_handler(message, get_date_range, user_data)
@@ -31,22 +35,32 @@ def get_password(message):
 
 def get_date_range(message, user_data):
     user_data['password'] = message.text
-    bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: March 1,10)')
+    print(message.text)
+    bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12,24)')
     bot.register_next_step_handler(message, def_get_username, user_data)
 
 
+def check_date_format(date_string):
+    pattern = r'^[A-Z][a-z]+\s+\d+,\d+$'
+    return re.match(pattern, date_string) is not None
+
+
 def def_get_username(message, user_data):
-    user_data['date'] = message.text
-
-    bot.send_message(message.chat.id, 'Укажите никнейм пользователя')
-
-    bot.register_next_step_handler(message, get_applicants, user_data)
+    if check_date_format(message.text):
+        user_data['date'] = message.text  # Обновляем данные в user_data
+        print(user_data['date'])
+        bot.send_message(message.chat.id, 'Укажите никнейм пользователя')
+        bot.register_next_step_handler(message, get_applicants, user_data)
+    else:
+        bot.send_message(message.chat.id, 'Неверный формат даты. Пожалуйста, введите дату в формате May 12,24')
+        bot.register_next_step_handler(message, def_get_username, user_data)  # Повторный ввод даты здесь
 
 
 def get_applicants(message, user_data):
     global queue_users
     bot.send_message(message.chat.id, 'Укажите колличество заявителей в аккаунте')
     user_data['username'] = message.text
+    print(message.text)
 
     bot.register_next_step_handler(message, record_in_date, user_data)
 
@@ -122,6 +136,17 @@ def get_first_available_date(driver):
     return date_list
 
 
+def get_options_date(user_data):
+    """
+    Функция для записи диапазона дат для аккаунтов
+    :param user_data:
+    :return:
+    """
+    global date_for_users
+
+    date_for_users[user_data['username']] = int(user_data['date'])
+
+
 def record_in_date(message, user_data):
     """
     Отслеживание и запись на свободную дату
@@ -135,6 +160,8 @@ def record_in_date(message, user_data):
     start_time = time.time()
 
     user_data['applicants'] = message.text
+    get_options_date(user_data)  # Словарь {'username': 'date'}
+    # Формируем список для очереди аккаунтов
     queue_users.append({'username': user_data['username'], 'applicants': user_data['applicants']})
     username = user_data['username']
 
@@ -147,9 +174,11 @@ def record_in_date(message, user_data):
     get_first_available_date(users[username])  # Получаем информацию о ближайшей открытой дате
 
     end_time = time.time()
-    print(start_time - end_time)
-    print(users)
-    print(queue_users)
+    # print(start_time - end_time)
+    # print(users)
+    # print(queue_users)
+    # print(user_data)
+    # print(date_for_users)
 
 
 def main():
