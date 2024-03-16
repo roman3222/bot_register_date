@@ -149,14 +149,12 @@ def get_calendar_date(driver):
     :return:
     """
     available_date = {}
-
-    # for i in driver.eles('@class:ui-datepicker-month'):
-    for date in driver.eles('@class:ui-datepicker-calendar'):
-        # first_date = date.ele('@class:ui-state-default ui-state-active ui-state-hover')
-        ava_date = date.eles('tag:td@onclick')
-        # print(first_date.text)
-        # print()
-        print(len(ava_date))
+    # ('@class:ui-datepicker-calendar')
+    for i in driver.eles('@class:ui-datepicker-month'):
+        for date in driver.eles('tag:td@onclick'):
+            fir_date = date('tag:a').text
+            available_date[i.text] = fir_date
+            print(available_date)
 
 
 def record_in_date(message, user_data):
@@ -168,8 +166,6 @@ def record_in_date(message, user_data):
     """
     global users
     global queue_users
-
-    start_time = time.time()
 
     user_data['applicants'] = message.text
     get_options_date(user_data)  # Словарь {'username': 'date'}
@@ -184,8 +180,10 @@ def record_in_date(message, user_data):
     page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
     get_first_available_date(users[username])  # Получаем информацию о ближайшей открытой дате
     get_calendar_date(users[username])
+    start_time = time.time()
     end_time = time.time()
-    # print(start_time - end_time)
+    print()
+    print(start_time - end_time)
     # print(users)
     # print(queue_users)
     # print(user_data)
