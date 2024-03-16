@@ -27,7 +27,6 @@ def get_login(message):
 
 
 def get_password(message):
-    print(message.text)
     user_data = {'login': message.text}
     bot.send_message(message.chat.id, f'Укажите пароль')
     bot.register_next_step_handler(message, get_date_range, user_data)
@@ -35,7 +34,6 @@ def get_password(message):
 
 def get_date_range(message, user_data):
     user_data['password'] = message.text
-    print(message.text)
     bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12,24)')
     bot.register_next_step_handler(message, def_get_username, user_data)
 
@@ -48,7 +46,6 @@ def check_date_format(date_string):
 def def_get_username(message, user_data):
     if check_date_format(message.text):
         user_data['date'] = message.text  # Обновляем данные в user_data
-        print(user_data['date'])
         bot.send_message(message.chat.id, 'Укажите никнейм пользователя')
         bot.register_next_step_handler(message, get_applicants, user_data)
     else:
@@ -60,7 +57,6 @@ def get_applicants(message, user_data):
     global queue_users
     bot.send_message(message.chat.id, 'Укажите колличество заявителей в аккаунте')
     user_data['username'] = message.text
-    print(message.text)
 
     bot.register_next_step_handler(message, record_in_date, user_data)
 
@@ -144,7 +140,23 @@ def get_options_date(user_data):
     """
     global date_for_users
 
-    date_for_users[user_data['username']] = int(user_data['date'])
+    date_for_users[user_data['username']] = user_data['date']
+
+
+def get_calendar_date(driver):
+    """
+    Функция для получения всех свободных дат
+    :return:
+    """
+    available_date = {}
+
+    # for i in driver.eles('@class:ui-datepicker-month'):
+    for date in driver.eles('@class:ui-datepicker-calendar'):
+        # first_date = date.ele('@class:ui-state-default ui-state-active ui-state-hover')
+        ava_date = date.eles('tag:td@onclick')
+        # print(first_date.text)
+        # print()
+        print(len(ava_date))
 
 
 def record_in_date(message, user_data):
@@ -164,7 +176,6 @@ def record_in_date(message, user_data):
     # Формируем список для очереди аккаунтов
     queue_users.append({'username': user_data['username'], 'applicants': user_data['applicants']})
     username = user_data['username']
-
     options = ChromiumOptions().auto_port()
     users[username] = ChromiumPage(options)
     users[username].get(url=url)  # Получаем страницу авторизации
@@ -172,7 +183,7 @@ def record_in_date(message, user_data):
     check_cloudflare(users[username])  # Проверка cloudflare
     page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
     get_first_available_date(users[username])  # Получаем информацию о ближайшей открытой дате
-
+    get_calendar_date(users[username])
     end_time = time.time()
     # print(start_time - end_time)
     # print(users)
