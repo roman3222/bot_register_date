@@ -34,7 +34,7 @@ def get_password(message):
 
 def get_date_range(message, user_data):
     user_data['password'] = message.text
-    bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12,24)')
+    bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12, 24)')
     bot.register_next_step_handler(message, def_get_username, user_data)
 
 
@@ -59,6 +59,32 @@ def get_applicants(message, user_data):
     user_data['username'] = message.text
 
     bot.register_next_step_handler(message, record_in_date, user_data)
+
+
+@bot.message_handler(commands=['setting_date'])
+def change_date_for_user(message):
+    bot.send_message(message.chat.id, 'Оправьте username для которого вы хотите изменить дату')
+
+    def process_username_input(username_message):
+        username = username_message.text
+        if username in date_for_users:
+            bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12, 24)')
+            bot.register_next_step_handler(username_message, process_date_input, username)
+        else:
+            bot.send_message(message.chat.id, 'Пользователь с таким username не найден')
+            bot.register_next_step_handler(username_message, process_username_input)
+
+    bot.register_next_step_handler(message, process_username_input)
+
+
+def process_date_input(message, username):
+    if check_date_format(message.text):
+        user_date = message.text
+        date_for_users[username] = user_date
+        print(date_for_users)
+    else:
+        bot.send_message(message.chat.id, 'Неверный формат даты. Пожалуйста, введите дату в формате May 12, 24')
+        bot.register_next_step_handler(message, process_date_input, username)
 
 
 def input_authorization(driver, user_data):
