@@ -2,7 +2,7 @@
 # import random
 import time
 # import telebot
-# import string
+import string
 # import undetected_chromedriver as uc
 # from selenium import webdriver
 # from selenium.webdriver.common.by import By
@@ -122,19 +122,19 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 
 # options = ChromiumOptions().auto_port()
 
-data = {}
-
-check_applicants = [
-    {'username': 'ola', 'applicants': 1},
-    {'username': 'lolo', 'applicants': 5},
-    {'username': 'lala', 'applicants': 3},
-    {'username': 'lilo', 'applicants': 3},
-    {'username': 'lala', 'applicants': 5}
-]
-
-check_applicants.sort(key=lambda k: k['applicants'])
-check_applicants.reverse()
-print(check_applicants)
+# data = {}
+#
+# queue_users = [
+#     {'username': 'ola', 'applicants': 1},
+#     {'username': 'lolo', 'applicants': 5},
+#     {'username': 'lala', 'applicants': 3},
+#     {'username': 'lilo', 'applicants': 3},
+#     {'username': 'lala', 'applicants': 5}
+# ]
+#
+# queue_users.sort(key=lambda k: k['applicants'])
+# queue_users.reverse()
+# print(queue_users)
 
 # username = check_applicants[0]['username']
 # username2 = check_applicants[1]['username']
@@ -163,8 +163,19 @@ print(check_applicants)
 #     get_session()
 #     get_page()
 
-s = 'First Available Appointment Is Tuesday October 29 2024'
+
+s = 'First Available Appointment Is Tuesday November 30 2024'
+user_date = {'tatjanavg': 'May 12, 23', 'tata': 'October 12, 31'}
 
 lst = s.split(' ')
-print(lst[5])
-print(lst[6])
+
+date = user_date['tata'].replace(',', '').split(' ')
+start_day, end_day = int(date[1]), int(date[2]) + 1
+
+need_date = {date[0]: list(range(start_day, end_day))}
+
+if lst[5] in date and start_day <= int(lst[6]) <= end_day:
+    print('True')
+else:
+    print('False')
+

@@ -39,7 +39,7 @@ def get_date_range(message, user_data):
 
 
 def check_date_format(date_string):
-    pattern = r'^[A-Z][a-z]+\s+\d+,\d+$'
+    pattern = r'^[A-Z][a-z]+\s\d{1,2},\s\d{2}$'
     return re.match(pattern, date_string) is not None
 
 
@@ -100,6 +100,21 @@ def check_cloudflare(driver):
         print(f'Элемент не найден:{error}')
 
 
+def get_first_available_date(driver):
+    """
+    Получаем ближайшую свободную дату
+    :param driver:
+    :return:
+    """
+
+    give_date = driver.ele('@class:leftPanelText')
+    time.sleep(4)
+    date = give_date.text
+    date = date.translate(str.maketrans('', '', string.punctuation))
+    date_list = date.split(' ')
+    return date_list
+
+
 def page_calendar(driver):
     """
     Переход на страницу с календарём
@@ -115,21 +130,7 @@ def page_calendar(driver):
 
     continue_button = driver.ele('@name:j_id0:SiteTemplate:theForm:j_id170')
     continue_button.click()
-    time.sleep(4)
-
-
-def get_first_available_date(driver):
-    """
-    Получаем ближайшую свободную дату
-    :param driver:
-    :return:
-    """
-    give_date = driver.ele('@class:leftPanelText')
-    time.sleep(4)
-    date = give_date.text
-    date = date.translate(str.maketrans('', '', string.punctuation))
-    date_list = date.split(' ')
-    return date_list
+    driver.wait.ele_loaded('@class:ui-datepicker-group ui-datepicker-group-first')
 
 
 def get_options_date(user_data):
@@ -149,12 +150,41 @@ def get_calendar_date(driver):
     :return:
     """
     available_date = {}
-    # ('@class:ui-datepicker-calendar')
-    for i in driver.eles('@class:ui-datepicker-month'):
-        for date in driver.eles('tag:td@onclick'):
-            fir_date = date('tag:a').text
-            available_date[i.text] = fir_date
-            print(available_date)
+    lst_class = [
+        driver.eles('@class:ui-datepicker-group ui-datepicker-group-first'),
+        driver.eles('@class:ui-datepicker-group ui-datepicker-group-middle'),
+        driver.eles('@class:ui-datepicker-group ui-datepicker-group-last')
+    ]
+
+    for lst in lst_class:
+        for first in lst:
+            month = first('@class:ui-datepicker-month').text
+            for ava_day in first.eles('tag:td@onclick'):
+                day = ava_day('tag:a').text
+                if month not in available_date:
+                    available_date[month] = []
+                available_date[month].append(day)
+    print(available_date)
+
+
+def check_available_date(date: dict, driver: ChromiumPage(), user_data: dict) -> bool:
+    """
+    Функция для проверки соответствия открытой дате на сайте нужной дате для пользователя
+    :param date: Словарь date_for_users
+    :param driver: объект ChromiumPage
+    :param user_data:
+    :return:
+    """
+    first_date = get_first_available_date(driver)
+
+    date_user = date[user_data['username']].replace(',', '').split(' ')
+    start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
+
+    # Проверка, что обе даты присутствуют в списке
+    if first_date[5] in date_user and start_day <= int(first_date[6]) <= end_day:
+        return True
+    else:
+        return False
 
 
 def record_in_date(message, user_data):
@@ -177,17 +207,10 @@ def record_in_date(message, user_data):
     users[username].get(url=url)  # Получаем страницу авторизации
     input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
     check_cloudflare(users[username])  # Проверка cloudflare
-    page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
-    get_first_available_date(users[username])  # Получаем информацию о ближайшей открытой дате
-    get_calendar_date(users[username])
-    start_time = time.time()
-    end_time = time.time()
-    print()
-    print(start_time - end_time)
-    # print(users)
-    # print(queue_users)
-    # print(user_data)
-    # print(date_for_users)
+    # page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
+    # get_calendar_date(users[username])
+    if check_available_date(date_for_users, users[username], user_data):
+        print('Найдено соответствие')
 
 
 def main():
