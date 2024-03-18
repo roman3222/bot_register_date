@@ -121,24 +121,51 @@ def check_cloudflare(driver):
         test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
         button = test.ele('@class:mark')
         button.click()
-        driver.wait.ele_loaded('#/selectvisapriority')
+        driver.wait.ele_loaded('@class:leftPanelText')
     except ElementNotFoundError as error:
         print(f'Элемент не найден:{error}')
 
 
-def get_first_available_date(driver):
+def get_options_date(user_data: dict):
     """
-    Получаем ближайшую свободную дату
-    :param driver:
+    Функция для записи диапазона дат для аккаунтов
+    :param user_data:
     :return:
     """
+    global date_for_users
 
-    give_date = driver.ele('@class:leftPanelText')
-    time.sleep(4)
-    date = give_date.text
-    date = date.translate(str.maketrans('', '', string.punctuation))
-    date_list = date.split(' ')
-    return date_list
+    date_for_users[user_data['username']] = user_data['date']
+
+
+def check_available_date(date_users: dict, driver: ChromiumPage(), queue: list[dict]) -> bool:
+    """
+    Проверяем соответствие первой открытой даты диапазону дат пользователя
+    :date_users: dict(date_for_users)
+    :driver: objects browser
+    """
+    while True:
+        try:
+            give_date = driver.ele('@class:leftPanelText')
+            date = give_date.text
+            date = date.translate(str.maketrans('', '', string.punctuation))
+            date_list = date.split(' ')
+
+            date_user = date_users[queue[0]['username']].replace(',', '').split(' ')
+            start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
+
+            # Проверка, что обе даты присутствуют в списке
+            if date_list[5] in date_user and start_day <= int(date_list[6]) <= end_day:
+                return True
+            else:
+                driver.wait(60)
+                driver.refresh()
+                driver.wait.ele_loaded('@class:leftPanelText')
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            break
+
+    print("Не удалось получить правильные данные о дате после нескольких попыток.")
+    return False
 
 
 def page_calendar(driver):
@@ -157,17 +184,6 @@ def page_calendar(driver):
     continue_button = driver.ele('@name:j_id0:SiteTemplate:theForm:j_id170')
     continue_button.click()
     driver.wait.ele_loaded('@class:ui-datepicker-group ui-datepicker-group-first')
-
-
-def get_options_date(user_data):
-    """
-    Функция для записи диапазона дат для аккаунтов
-    :param user_data:
-    :return:
-    """
-    global date_for_users
-
-    date_for_users[user_data['username']] = user_data['date']
 
 
 def get_calendar_date(driver):
@@ -193,26 +209,6 @@ def get_calendar_date(driver):
     print(available_date)
 
 
-def check_available_date(date: dict, driver: ChromiumPage(), user_data: dict) -> bool:
-    """
-    Функция для проверки соответствия открытой дате на сайте нужной дате для пользователя
-    :param date: Словарь date_for_users
-    :param driver: объект ChromiumPage
-    :param user_data:
-    :return:
-    """
-    first_date = get_first_available_date(driver)
-
-    date_user = date[user_data['username']].replace(',', '').split(' ')
-    start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
-
-    # Проверка, что обе даты присутствуют в списке
-    if first_date[5] in date_user and start_day <= int(first_date[6]) <= end_day:
-        return True
-    else:
-        return False
-
-
 def record_in_date(message, user_data):
     """
     Отслеживание и запись на свободную дату
@@ -223,20 +219,33 @@ def record_in_date(message, user_data):
     global users
     global queue_users
 
-    user_data['applicants'] = message.text
-    get_options_date(user_data)  # Словарь {'username': 'date'}
-    # Формируем список для очереди аккаунтов
-    queue_users.append({'username': user_data['username'], 'applicants': user_data['applicants']})
-    username = user_data['username']
-    options = ChromiumOptions().auto_port()
-    users[username] = ChromiumPage(options)
-    users[username].get(url=url)  # Получаем страницу авторизации
-    input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
-    check_cloudflare(users[username])  # Проверка cloudflare
-    # page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
-    # get_calendar_date(users[username])
-    if check_available_date(date_for_users, users[username], user_data):
-        print('Найдено соответствие')
+    try:
+        user_data['applicants'] = message.text
+        get_options_date(user_data)  # Словарь {'username': 'date'}
+        # Формируем список для очереди аккаунтов
+        queue_users.append({'username': user_data['username'], 'applicants': user_data['applicants']})
+        username = user_data['username']
+        options = ChromiumOptions().auto_port()
+        users[username] = ChromiumPage(options)
+        users[username].get(url=url)  # Получаем страницу авторизации
+        input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
+        check_cloudflare(users[username])  # Проверка cloudflare
+        start = time.time()
+        first_user = queue_users[0]['username']
+        if check_available_date(date_for_users, users[first_user], queue_users):
+            users[first_user].wait.ele_loaded('/selectvisapriority')
+            page_calendar(users[first_user])  # Переходим на страницу с календарём свободных дат
+            users[first_user].quit()
+            queue_users.pop(0)
+            del users[first_user]
+            end = time.time()
+            print(start - end)
+    except Exception as error:
+        for name, driver in users.items():
+            driver.quit()
+            print(f'Подключения для {name} были закрыты по причине {error}')
+        users.clear()
+        queue_users.clear()
 
 
 def main():

@@ -164,18 +164,29 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 #     get_page()
 
 
-s = 'First Available Appointment Is Tuesday November 30 2024'
-user_date = {'tatjanavg': 'May 12, 23', 'tata': 'October 12, 31'}
+# s = 'First Available Appointment Is Tuesday November 30 2024'
+# user_date = {'tatjanavg': 'May 12, 23', 'tata': 'October 12, 31'}
+#
+# lst = s.split(' ')
+#
+# date = user_date['tata'].replace(',', '').split(' ')
+# start_day, end_day = int(date[1]), int(date[2]) + 1
+#
+# need_date = {date[0]: list(range(start_day, end_day))}
+#
+# if lst[5] in date and start_day <= int(lst[6]) <= end_day:
+#     print('True')
+# else:
+#     print('False')
 
-lst = s.split(' ')
-
-date = user_date['tata'].replace(',', '').split(' ')
-start_day, end_day = int(date[1]), int(date[2]) + 1
-
-need_date = {date[0]: list(range(start_day, end_day))}
-
-if lst[5] in date and start_day <= int(lst[6]) <= end_day:
-    print('True')
-else:
-    print('False')
-
+# tup = (1, 2, 3)
+#
+#
+# def change_tup():
+#     global tup
+#     for i in range(1, 15):
+#         tup += (i,)
+#
+# change_tup()
+#
+# print(tup)
