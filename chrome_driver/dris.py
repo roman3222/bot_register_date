@@ -1,8 +1,10 @@
+import copy
 import time
 import os
 import telebot
 import string
 import re
+import threading
 from DrissionPage import ChromiumOptions, ChromiumPage
 from DrissionPage.errors import ElementNotFoundError
 from dotenv import load_dotenv
@@ -18,6 +20,8 @@ users = {}
 queue_users = []
 
 date_for_users = {}
+
+need_date = []
 
 
 @bot.message_handler(commands=['start'])
@@ -58,7 +62,7 @@ def get_applicants(message, user_data):
     bot.send_message(message.chat.id, 'Укажите колличество заявителей в аккаунте')
     user_data['username'] = message.text
 
-    bot.register_next_step_handler(message, record_in_date, user_data)
+    bot.register_next_step_handler(message, start_record_in_date_thread, user_data)
 
 
 @bot.message_handler(commands=['setting_date'])
@@ -118,7 +122,7 @@ def check_cloudflare(driver):
     :return:
     """
     try:
-        test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
+        test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label', timeout=3)
         button = test.ele('@class:mark')
         button.click()
         driver.wait.ele_loaded('@class:leftPanelText')
@@ -143,6 +147,8 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), queue: list[d
     :date_users: dict(date_for_users)
     :driver: objects browser
     """
+    global need_date
+
     while True:
         try:
             give_date = driver.ele('@class:leftPanelText')
@@ -152,14 +158,13 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), queue: list[d
 
             date_user = date_users[queue[0]['username']].replace(',', '').split(' ')
             start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
-
+            need_date = copy.deepcopy(date_user)
             # Проверка, что обе даты присутствуют в списке
             if date_list[5] in date_user and start_day <= int(date_list[6]) <= end_day:
                 return True
             else:
                 driver.wait(60)
                 driver.refresh()
-                driver.wait.ele_loaded('@class:leftPanelText')
         except Exception as e:
             print(f"Произошла ошибка: {e}")
             break
@@ -191,22 +196,32 @@ def get_calendar_date(driver):
     Функция для получения всех свободных дат
     :return:
     """
-    available_date = {}
     lst_class = [
         driver.eles('@class:ui-datepicker-group ui-datepicker-group-first'),
         driver.eles('@class:ui-datepicker-group ui-datepicker-group-middle'),
         driver.eles('@class:ui-datepicker-group ui-datepicker-group-last')
     ]
 
-    for lst in lst_class:
-        for first in lst:
-            month = first('@class:ui-datepicker-month').text
-            for ava_day in first.eles('tag:td@onclick'):
-                day = ava_day('tag:a').text
-                if month not in available_date:
-                    available_date[month] = []
-                available_date[month].append(day)
-    print(available_date)
+    num_date = [num for num in range(int(need_date[1]), int(need_date[2]) + 1)]
+
+    available = driver.ele('@id:thePage:SiteTemplate:theForm:calendarTableMessage')
+    sons = available.ele('tag:td', index=8)
+
+    if sons.text >= queue_users[0]['applicants']:
+        box = driver.ele('tag:input@type:checkbox')
+        box.click()
+
+    # for lst in lst_class:
+    #     for first in lst:
+    #         month = first('@class:ui-datepicker-month').text
+    #         for ava_day in first.eles('tag:td@onclick'):
+    #             print(ava_day)
+    #             day = ava_day('tag:a')
+    #             if month in need_date and int(day.text) in num_date:
+    #                 ava_day.click()
+    #                 box = driver.ele('tag:input@type:checkbox')
+    #                 box.click()
+    #                 print(f'Найдено {month}-{day.text}')
 
 
 def record_in_date(message, user_data):
@@ -235,6 +250,8 @@ def record_in_date(message, user_data):
         if check_available_date(date_for_users, users[first_user], queue_users):
             users[first_user].wait.ele_loaded('/selectvisapriority')
             page_calendar(users[first_user])  # Переходим на страницу с календарём свободных дат
+            get_calendar_date(users[first_user])
+            time.sleep(10)
             users[first_user].quit()
             queue_users.pop(0)
             del users[first_user]
@@ -246,6 +263,10 @@ def record_in_date(message, user_data):
             print(f'Подключения для {name} были закрыты по причине {error}')
         users.clear()
         queue_users.clear()
+
+
+def start_record_in_date_thread(message, user_data):
+    threading.Thread(target=record_in_date, args=(message, user_data)).start()
 
 
 def main():

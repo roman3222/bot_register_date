@@ -1,4 +1,5 @@
 # import os
+import datetime
 # import random
 import time
 # import telebot
@@ -190,3 +191,28 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 # change_tup()
 #
 # print(tup)
+
+# date_user = [1, 20]
+# user = {'tatjanavg': 'October 12, 21'}
+# start_day, end_day = int(date_user[0]), int(date_user[1]) + 1
+
+# date = ['1', '19']
+#
+# num_date = [num for num in range(int(date[0]), int(date[1]) + 1)]
+#
+# print(num_date)
+
+
+driver = ChromiumPage()
+
+driver.get('https://www.youtube.com/')
+
+driver.wait.load_start()
+
+driver.ele('@gdfgfd').ele
+
+shorts = driver.ele('@style:width: 100%; height: 100%; display: block; fill: currentcolor;')
+
+sons = shorts.children()
+
+print(sons)
