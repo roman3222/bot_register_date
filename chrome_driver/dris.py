@@ -8,7 +8,7 @@ import logging
 from telebot.types import Message
 from telebot import types
 from DrissionPage import ChromiumOptions, ChromiumPage
-from DrissionPage.errors import ElementNotFoundError
+from DrissionPage.errors import ElementNotFoundError, ElementLostError
 from dotenv import load_dotenv
 
 logging.basicConfig(filename='logger/bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -90,20 +90,20 @@ def change_date_for_user(message):
     else:
         bot.send_message(message.chat.id, 'Сейчас нет активных пользователей, /help')
 
-    def process_username_input(username_message: Message):
+    def process_username_input(message: Message):
         """
         Проверка наличия пользователя и формата даты
         :return:
         """
-        user_id = username_message.chat.id
+        user_id = message.chat.id
         if user_id in searching_user and searching_user[user_id]:
-            username = username_message.text
+            username = message.text
             if username in date_for_users:
                 bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12, 24)')
-                bot.register_next_step_handler(username_message, process_date_input, username)
+                bot.register_next_step_handler(message, process_date_input, username)
             else:
                 bot.send_message(message.chat.id, 'Пользователь с таким username не найден')
-                bot.register_next_step_handler(username_message, process_username_input)
+                bot.register_next_step_handler(message, process_username_input)
             searching_user[user_id] = False
 
         bot.register_next_step_handler(message, process_username_input)
@@ -193,13 +193,6 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, me
     :date_users: global dict(date_for_users)
     :driver: objects browser
     """
-    if driver.ele('@class:leftPanelText') is None:
-        bot.send_message(
-            message.chat.id,
-            f"Не правильно указан логин или пароль нажмите /start для повторного входа({user_data['username']})"
-        )
-        driver.quit()
-        del users[user_data['username']]
 
     while True:
         try:
@@ -216,12 +209,14 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, me
                 return True
             else:
                 time.sleep(3)
-                driver.refresh()
-        except Exception as error:
-            logging.error(f"Ошибка в check_available_date - {error}")
+        except ElementNotFoundError as error:
+            logging.error(f"{error}")
+            bot.send_message(
+                message.chat.id,
+                f"Не правильно указан логин или пароль нажмите /start для повторного входа({user_data['username']})"
+            )
             driver.quit()
             del users[user_data['username']]
-            bot.register_next_step_handler(message, get_login)
             break
 
     return False
@@ -362,8 +357,9 @@ def start_record_in_date_thread(message: Message, user_data: dict):
     :param user_data: словарь с данными пользователя
     :return:
     """
-    threading.Thread(target=record_in_date, args=(message, user_data)).start()
-
+    thread = threading.Thread(target=record_in_date, args=(message, user_data))
+    thread.start()
+    thread.join()
 
 def main():
     bot.polling(none_stop=True)
