@@ -3,12 +3,13 @@ import os
 import telebot
 import string
 import re
-import threading
 import logging
+import random
+import multiprocessing
 from telebot.types import Message
 from telebot import types
 from DrissionPage import ChromiumOptions, ChromiumPage
-from DrissionPage.errors import ElementNotFoundError, ElementLostError
+from DrissionPage.errors import ElementNotFoundError
 from dotenv import load_dotenv
 
 logging.basicConfig(filename='logger/bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -56,7 +57,7 @@ def get_date_range(message, user_data):
 
 
 def check_date_format(date_string):
-    pattern = r'^[A-Z][a-z]+\s\d{1,2},\s\d{2}$'
+    pattern = r'^([A-Z][a-z]+)\s\d{1,2},\s\d{2},\s([A-Z][a-z]+)\s\d{1,2},\s\d{2}$'
     return re.match(pattern, date_string) is not None
 
 
@@ -74,54 +75,47 @@ def get_applicants(message, user_data):
     bot.send_message(message.chat.id, 'Укажите колличество заявителей в аккаунте')
     user_data['username'] = message.text
 
-    bot.register_next_step_handler(message, start_record_in_date_thread, user_data)
+    bot.register_next_step_handler(message, start_process, user_data)
 
 
 @bot.message_handler(commands=['setting_date'])
+def start_setting_date(message):
+    change_date_for_user(message)
+
+
 def change_date_for_user(message):
     if users:
         keyboard = types.InlineKeyboardMarkup(row_width=1)
         for user in users:
             button = types.InlineKeyboardButton(text=user, callback_data=user)
             keyboard.add(button)
-        bot.send_message(message.chat.id, 'Оправьте username для которого вы хотите изменить дату',
+        bot.send_message(message.chat.id, 'Отправьте username для которого вы хотите изменить дату',
                          reply_markup=keyboard)
-        searching_user[message.chat.id] = True
     else:
         bot.send_message(message.chat.id, 'Сейчас нет активных пользователей, /help')
 
-    def process_username_input(message: Message):
-        """
-        Проверка наличия пользователя и формата даты
-        :return:
-        """
-        user_id = message.chat.id
-        if user_id in searching_user and searching_user[user_id]:
-            username = message.text
-            if username in date_for_users:
-                bot.send_message(message.chat.id, 'Укажите диапазон даты для записи(Формат: May 12, 24)')
-                bot.register_next_step_handler(message, process_date_input, username)
-            else:
-                bot.send_message(message.chat.id, 'Пользователь с таким username не найден')
-                bot.register_next_step_handler(message, process_username_input)
-            searching_user[user_id] = False
 
-        bot.register_next_step_handler(message, process_username_input)
+@bot.callback_query_handler(func=lambda call: True)
+def process_username_input(call):
+    user_id = call.message.chat.id
+    if user_id in searching_user and searching_user[user_id]:
+        username = call.data
+        if username in date_for_users:
+            bot.send_message(user_id, 'Укажите диапазон даты для записи (Формат: May 12, 24)')
+            bot.register_next_step_handler(call.message, process_date_input, username)
+        else:
+            bot.send_message(user_id, 'Пользователь с таким username не найден')
 
 
-def process_date_input(message: Message, username: str):
-    """
-    Проверка и изменение даты для пользователя
-    :return:
-    """
+def process_date_input(message, username):
     user_id = message.chat.id
     if user_id in searching_user and searching_user[user_id]:
         if check_date_format(message.text):
             user_date = message.text
             date_for_users[username] = user_date
-            print(date_for_users)
+            bot.send_message(user_id, f'Дата успешно изменена для пользователя {username}')
         else:
-            bot.send_message(message.chat.id, 'Неверный формат даты. Пожалуйста, введите дату в формате May 12, 24')
+            bot.send_message(user_id, 'Неверный формат даты. Пожалуйста, введите дату в формате May 12, 24')
             bot.register_next_step_handler(message, process_date_input, username)
 
 
@@ -135,6 +129,7 @@ def get_active_users(message: Message):
             )
     else:
         bot.send_message(message.chat.id, 'Сейчас нет активных пользователей /help')
+        return
 
 
 def input_authorization(driver: ChromiumPage, user_data: dict):
@@ -144,17 +139,19 @@ def input_authorization(driver: ChromiumPage, user_data: dict):
     :param user_data:
     :return:
     """
+    driver.wait.ele_loaded('#loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
     login_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
+    # login_input.wait.disabled()
     login_input.input(user_data['login'])
-    time.sleep(1)
+    # time.sleep(1)
 
     password_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
     password_input.input(user_data['password'])
-    time.sleep(1)
+    # time.sleep(1)
 
     agree_button = driver.ele('@name:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
     agree_button.click()
-    time.sleep(1)
+    # time.sleep(1)
 
     login_button = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:loginButton')
     login_button.click()
@@ -168,10 +165,9 @@ def check_cloudflare(driver: ChromiumPage):
     :return:
     """
     try:
-        test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label', timeout=3)
+        test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
         button = test.ele('@class:mark')
         button.click()
-        driver.wait.ele_loaded('@class:leftPanelText')
     except ElementNotFoundError as error:
         logging.info(f"Проверки не было - {error}")
 
@@ -196,30 +192,34 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, me
 
     while True:
         try:
-            give_date = driver.ele('@class:leftPanelText')
-            logging.info(f"Успешная авторизация для {user_data['username']}")
-            date = give_date.text
-            date = date.translate(str.maketrans('', '', string.punctuation))
+            give_date = driver.ele('@class:leftPanelText').text
+            # give_date.wait.displayed()
+            logging.info(f'{give_date}')
+            date = give_date.translate(str.maketrans('', '', string.punctuation))
             date_list = date.split(' ')
+            if 'March' in date_list:
+                logging.info('Открытая дата на Март')
 
             date_user = date_users[user_data['username']].replace(',', '').split(' ')
             start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
+            start, end = int(date_user[4]), int(date_user[5]) + 1
             # Проверка, что обе даты присутствуют в списке
-            if date_list[5] in date_user and start_day <= int(date_list[6]) <= end_day:
+            if date_list[5] == date_user[0] and start_day <= int(date_list[6]) <= end_day:
+                return True
+            elif date_list[5] == date_user[3] and start <= int(date_list[6]) <= end:
                 return True
             else:
-                time.sleep(3)
-        except ElementNotFoundError as error:
+                sleep = random.randint(75, 120)
+                time.sleep(sleep)
+                driver.refresh()
+                driver.wait.ele_displayed('#leftPanelText')
+                # driver.wait.ele_displayed('@class:leftPanelText')
+        except Exception as error:
             logging.error(f"{error}")
-            bot.send_message(
-                message.chat.id,
-                f"Не правильно указан логин или пароль нажмите /start для повторного входа({user_data['username']})"
-            )
             driver.quit()
-            del users[user_data['username']]
-            break
-
-    return False
+            username = user_data['username']
+            del users[username]
+            record_in_date(message, user_data)
 
 
 def page_calendar(driver: ChromiumPage):
@@ -241,15 +241,27 @@ def page_calendar(driver: ChromiumPage):
 
 
 def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message) -> bool:
+    """
+    Проврка наличия свободных мест на выделеной дате
+    :param driver:
+    :param user_data:
+    :param message:
+    :return:
+    """
+    date = user_data['date'].replace(',', '').split(' ')
+    month_1 = date[0]
+    month_2 = date[3]
     available = driver.ele('@id:thePage:SiteTemplate:theForm:calendarTableMessage')
-    free_space = available.ele('tag:td', index=8)
+    free_space = available.ele('tag:td', index=8).text
     free_date = available.ele('tag:td', index=7).text
 
-    if free_space.text >= user_data['applicants']:
+    if free_space >= user_data['applicants']:
         box = driver.ele('tag:input@type:checkbox')
         box.click()
         parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
         schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
+        schedule_button.click()
+        logging.info('Нажата кнопка записи в first_date')
         name = user_data['username']
         bot.send_message(message.chat.id, f"{name} был записан на {free_date}")
         logging.info(f'{name} был записан')
@@ -294,6 +306,8 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict):
                                 check_date.clear()
                                 parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
                                 schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
+                                schedule_button.click()
+                                logging.info('Нажата кнопка записи в next_date')
                                 name = user_data['username']
                                 bot.send_message(
                                     message.chat.id,
@@ -325,20 +339,19 @@ def record_in_date(message, user_data):
     global users
 
     try:
-        user_data['applicants'] = message.text
         get_options_date(user_data)  # Словарь {'username': 'date'}
         username = user_data['username']
-        options = ChromiumOptions().auto_port()
+        options = ChromiumOptions().auto_port(True)
         users[username] = ChromiumPage(options)
         users[username].get(url=url)  # Получаем страницу авторизации
         input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
         check_cloudflare(users[username])  # Проверка cloudflare
+        users[username].wait.ele_loaded('#leftPanelText')
         if check_available_date(date_for_users, users[username], user_data, message):
             users[username].wait.ele_loaded('/selectvisapriority')
             page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
             if record_in_first_date(users[username], user_data, message):
                 action_finally(users[username], user_data)
-                print(users)
             else:
                 record_in_next_date(users[username], message, user_data)
                 action_finally(users[username], user_data)
@@ -350,19 +363,19 @@ def record_in_date(message, user_data):
         record_in_date(message, user_data)
 
 
-def start_record_in_date_thread(message: Message, user_data: dict):
-    """
-    Запуск record_in_date в отдельном потоке
-    :param message: объект Message
-    :param user_data: словарь с данными пользователя
-    :return:
-    """
-    thread = threading.Thread(target=record_in_date, args=(message, user_data))
-    thread.start()
-    thread.join()
+def start_process(message, user_data):
+    user_data['applicants'] = message.text
+    p = multiprocessing.Process(target=record_in_date, args=(message, user_data))
+    p.start()
+    p.join()
+
 
 def main():
-    bot.polling(none_stop=True)
+    try:
+        bot.polling(none_stop=True)
+    except Exception as error:
+        logging.error(f'{error}')
+        main()
 
 
 if __name__ == '__main__':
