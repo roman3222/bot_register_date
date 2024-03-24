@@ -183,7 +183,7 @@ def get_options_date(user_data: dict):
     date_for_users[user_data['username']] = user_data['date']
 
 
-def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message) -> bool:
+def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message, options) -> bool:
     """
     Проверяем соответствие первой открытой даты диапазону дат пользователя
     :date_users: global dict(date_for_users)
