@@ -10,7 +10,9 @@ from telebot.types import Message
 from telebot import types
 from DrissionPage import ChromiumOptions, ChromiumPage
 from DrissionPage.errors import ElementNotFoundError
+from DrissionPage.common import Keys
 from dotenv import load_dotenv
+from data import proxy
 
 logging.basicConfig(filename='logger/bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -139,23 +141,16 @@ def input_authorization(driver: ChromiumPage, user_data: dict):
     :param user_data:
     :return:
     """
-    driver.wait.ele_loaded('#loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
-    login_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
-    # login_input.wait.disabled()
+    driver.wait.ele_loaded('#id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
+    login_input = driver.actions.click('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
     login_input.input(user_data['login'])
-    # time.sleep(1)
 
-    password_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
+    password_input = driver.actions.click('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
     password_input.input(user_data['password'])
-    # time.sleep(1)
 
-    agree_button = driver.ele('@name:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
-    agree_button.click()
-    # time.sleep(1)
+    driver.actions.click('@name:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
 
-    login_button = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:loginButton')
-    login_button.click()
-    driver.wait.ele_loaded('#cross-origin-isolated')
+    driver.actions.type(Keys.ENTER)
 
 
 def check_cloudflare(driver: ChromiumPage):
@@ -165,7 +160,9 @@ def check_cloudflare(driver: ChromiumPage):
     :return:
     """
     try:
+        driver.wait.ele_loaded('#allow:cross-origin-isolated')
         test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
+        driver.wait.ele_loaded('#class:mark')
         button = test.ele('@class:mark')
         button.click()
     except ElementNotFoundError as error:
@@ -183,7 +180,17 @@ def get_options_date(user_data: dict):
     date_for_users[user_data['username']] = user_data['date']
 
 
-def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message, options) -> bool:
+def get_list_date(date: dict, user_data: dict) -> list:
+    """
+    Функция для формирования саиска с датой пользователя
+    :param date: словарь date_for_user
+    :param user_data: словарь с данными пользователя
+    """
+    date_user = date[user_data['username']].replace(',', '').split(' ')
+    return date_user
+
+
+def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message) -> bool:
     """
     Проверяем соответствие первой открытой даты диапазону дат пользователя
     :date_users: global dict(date_for_users)
@@ -192,33 +199,36 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, me
 
     while True:
         try:
+            driver.wait.ele_loaded('#class:leftPanelText')
             give_date = driver.ele('@class:leftPanelText').text
-            # give_date.wait.displayed()
             logging.info(f'{give_date}')
             date = give_date.translate(str.maketrans('', '', string.punctuation))
             date_list = date.split(' ')
-            if 'March' in date_list:
-                logging.info('Открытая дата на Март')
 
-            date_user = date_users[user_data['username']].replace(',', '').split(' ')
-            start_day, end_day = int(date_user[1]), int(date_user[2]) + 1
-            start, end = int(date_user[4]), int(date_user[5]) + 1
+            date_user = get_list_date(date_users, user_data)
+            start_day, end_day = int(date_user[1]), int(date_user[2]) + 1  # Первая дата
+            start, end = int(date_user[4]), int(date_user[5]) + 1  # Вторая дата
             # Проверка, что обе даты присутствуют в списке
             if date_list[5] == date_user[0] and start_day <= int(date_list[6]) <= end_day:
+                logging.info(f"Отслежена дата для {user_data['username']} на {date_user[0]}")
                 return True
             elif date_list[5] == date_user[3] and start <= int(date_list[6]) <= end:
+                logging.info(f"Отслежена дата для {user_data['username']} на {date_user[3]}")
                 return True
             else:
-                sleep = random.randint(75, 120)
-                time.sleep(sleep)
-                driver.refresh()
-                driver.wait.ele_displayed('#leftPanelText')
-                # driver.wait.ele_displayed('@class:leftPanelText')
+                offset_x = random.randint(300, 500)
+                offset_y = random.randint(250, 300)
+                cont = random.randint(1, 3)
+                driver.actions.move(offset_x=offset_x, offset_y=offset_y, duration=cont)
+                driver.actions.up(random.randint(20, 50))
+                driver.actions.db_click()
+
+                user = random.choice(list(users.values()))
+                user.actions.type(Keys.F5)
+                time.sleep(random.randint(32, 50))
         except Exception as error:
-            logging.error(f"{error}")
-            driver.quit()
-            username = user_data['username']
-            del users[username]
+            logging.error(f"В функции check_available_date - {error}")
+            action_finally(driver, user_data)
             record_in_date(message, user_data)
 
 
@@ -228,15 +238,14 @@ def page_calendar(driver: ChromiumPage):
     :param driver:
     :return:
     """
-    schedule_page = driver.ele('@href:/selectvisapriority')
-    schedule_page.click()
-    time.sleep(3)
+    driver.wait.ele_loaded('#href:/selectvisapriority')
+    driver.actions.click('@href:/selectvisapriority')
 
-    status_resident = driver.ele('@id:j_id0:SiteTemplate:theForm:SelectedVisaPriority:0')
-    status_resident.click()
+    driver.wait.ele_loaded('#id:j_id0:SiteTemplate:theForm:SelectedVisaPriority:0')
+    driver.actions.click('@id:j_id0:SiteTemplate:theForm:SelectedVisaPriority:0')
 
-    continue_button = driver.ele('@name:j_id0:SiteTemplate:theForm:j_id170')
-    continue_button.click()
+    driver.actions.click('@name:j_id0:SiteTemplate:theForm:j_id170')
+
     driver.wait.ele_loaded('@class:ui-datepicker-group ui-datepicker-group-first')
 
 
@@ -248,26 +257,32 @@ def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message
     :param message:
     :return:
     """
-    date = user_data['date'].replace(',', '').split(' ')
-    month_1 = date[0]
-    month_2 = date[3]
+    date = get_list_date(date_for_users, user_data)
+    month_user = {date[0], date[3]}
+    first_month = driver.ele('@class:ui-datepicker-group ui-datepicker-group-first')
+    month_calendar = first_month.ele('@class:ui-datepicker-month').text
+
+    if month_calendar not in month_user:
+        driver.actions.click('tag:a@href:/ApplicantHome')
+        check_available_date(date_for_users, driver, user_data, message)
+        return False
+
     available = driver.ele('@id:thePage:SiteTemplate:theForm:calendarTableMessage')
     free_space = available.ele('tag:td', index=8).text
     free_date = available.ele('tag:td', index=7).text
 
     if free_space >= user_data['applicants']:
-        box = driver.ele('tag:input@type:checkbox')
-        box.click()
+        driver.actions.click('tag:input@type:checkbox')
         parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
         schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
-        schedule_button.click()
+        # schedule_button.click()
         logging.info('Нажата кнопка записи в first_date')
         name = user_data['username']
         bot.send_message(message.chat.id, f"{name} был записан на {free_date}")
-        logging.info(f'{name} был записан')
+        logging.info(f'{name} был записан на {free_date}')
         return True
-
-    return False
+    else:
+        record_in_next_date(driver, message, user_data)
 
 
 def record_in_next_date(driver: ChromiumPage, message, user_data: dict):
@@ -283,7 +298,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict):
         driver.ele('@class:ui-datepicker-group ui-datepicker-group-last'),
     ]
 
-    need_date = date_for_users[user_data['username']].replace(',', '').split(' ')
+    need_date = get_list_date(date_for_users, user_data)
     num_date = [num for num in range(int(need_date[1]), int(need_date[2]) + 1)]
 
     try:
@@ -306,7 +321,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict):
                                 check_date.clear()
                                 parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
                                 schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
-                                schedule_button.click()
+                                # schedule_button.click()
                                 logging.info('Нажата кнопка записи в next_date')
                                 name = user_data['username']
                                 bot.send_message(
@@ -326,6 +341,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict):
 def action_finally(driver: ChromiumPage, user_data: dict):
     driver.quit()
     username = user_data['username']
+    del date_for_users[username]
     del users[username]
 
 
@@ -342,24 +358,19 @@ def record_in_date(message, user_data):
         get_options_date(user_data)  # Словарь {'username': 'date'}
         username = user_data['username']
         options = ChromiumOptions().auto_port(True)
+        options.set_proxy(random.choice(proxy))
         users[username] = ChromiumPage(options)
         users[username].get(url=url)  # Получаем страницу авторизации
         input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
         check_cloudflare(users[username])  # Проверка cloudflare
-        users[username].wait.ele_loaded('#leftPanelText')
         if check_available_date(date_for_users, users[username], user_data, message):
-            users[username].wait.ele_loaded('/selectvisapriority')
             page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
-            if record_in_first_date(users[username], user_data, message):
-                action_finally(users[username], user_data)
-            else:
-                record_in_next_date(users[username], message, user_data)
+            if record_in_first_date(users[username], user_data, message):  # Если первая дата подходит по критериям
                 action_finally(users[username], user_data)
     except Exception as error:
         logging.error(f"Ошибка при выполнении record_in_data - {error}")
         username = user_data['username']
-        users[username].quit()
-        del users[username]
+        action_finally(users[username], user_data)
         record_in_date(message, user_data)
 
 

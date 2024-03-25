@@ -1,7 +1,6 @@
 import time
 import logging
 import random
-
 from fake_useragent import UserAgent
 from DrissionPage import ChromiumOptions, ChromiumPage
 from DrissionPage.errors import ElementNotFoundError
@@ -15,6 +14,13 @@ proxy = [
     'http://45.133.227.68:8000',
     'http://193.56.188.205:8000',
     'http://45.129.4.105:8000',
+    'http://46.3.232.21:8000',
+    'http://46.3.232.186:8000',
+    'http://46.3.235.24:8000',
+    'http://46.3.234.235:8000',
+    'http://45.129.171.156:8000',
+    'http://45.129.171.66:8000',
+    'http://45.129.171.165:8000',
 ]
 
 url = 'https://portal.ustraveldocs.com'
@@ -25,7 +31,7 @@ drive = {}
 def get_driver():
     global drive
     options = ChromiumOptions()
-    options.set_proxy(random.choice(proxy))
+    options.set_proxy(proxy[-1])
     options.auto_port(True)
     driver = ChromiumPage(addr_or_opts=options)
     drive['link'] = driver
@@ -35,17 +41,15 @@ def get_driver():
 def check(driver):
     driver.get(url=url)
     driver.wait.ele_loaded('#id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
-    login_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
-    login_input.input("romkakms3222@gmail.com")
+    login_input = driver.actions.click('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
+    login_input.input("ivan_petr22@mail.ru")
 
-    password_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
+    password_input = driver.actions.click('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
     password_input.input("1234lera")
 
-    agree_button = driver.ele('@name:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
-    agree_button.click()
+    driver.actions.click('@name:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:j_id167')
 
-    login_button = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:loginButton')
-    login_button.click()
+    driver.actions.type(Keys.ENTER)
 
     try:
         driver.wait.ele_loaded('#allow:cross-origin-isolated')
@@ -66,12 +70,14 @@ def cheat_text():
             driver.wait.ele_loaded('#class:leftPanelText')
             give_date = driver.ele('@class:leftPanelText').text
             logging.info(f'{give_date}')
+            offset_x = random.randint(300, 500)
+            offset_y = random.randint(250, 300)
             cont = random.randint(3, 7)
-            driver.actions.move(offset_x=random.randint(20, 40), offset_y=random.randint(20, 45), duration=cont)
-            driver.actions.up(random.randint(20, 50))
+            driver.actions.move(offset_x=offset_x, offset_y=offset_y, duration=cont)
+            driver.actions.up(random.randint(120, 430))
             driver.actions.db_click()
-            driver.refresh(ignore_cache=True)
-            time.sleep(random.randint(32, 50))
+            driver.actions.type(Keys.F5)
+            time.sleep(random.randint(75, 113))
             end = time.time()
             res = start - end
             logging.info(f"{res}")
