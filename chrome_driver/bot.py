@@ -36,7 +36,7 @@ def check(driver):
     driver.get(url=url)
     driver.wait.ele_loaded('#id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
     login_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
-    login_input.input("romkakms3222@gmail.com")
+    login_input.input("ivan_petr22@mail.ru")
 
     password_input = driver.ele('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:password')
     password_input.input("1234lera")
@@ -71,7 +71,7 @@ def cheat_text():
             driver.actions.up(random.randint(20, 50))
             driver.actions.db_click()
             driver.refresh(ignore_cache=True)
-            time.sleep(random.randint(32, 50))
+            time.sleep(random.randint(67, 113))
             end = time.time()
             res = start - end
             logging.info(f"{res}")
