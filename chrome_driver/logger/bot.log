@@ -1,112 +1,316 @@
-2024-03-27 03:19:10,705 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:19:40,879 - INFO - Проверки не было - 
-没有找到元素。
-method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 03:19:51,032 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:19:52,618 - INFO - Страницу обновилnogoeva
-2024-03-27 03:20:21,059 - INFO - Страницу обновилstesh
-2024-03-27 03:20:41,676 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:20:45,270 - INFO - Страницу обновилnogoeva
-2024-03-27 03:21:11,186 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:21:13,776 - INFO - Страницу обновилstesh
-2024-03-27 03:21:41,410 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:21:45,010 - INFO - Страницу обновилnogoeva
-2024-03-27 03:21:57,976 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:22:01,575 - INFO - Страницу обновилstesh
-2024-03-27 03:22:28,139 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:22:30,729 - INFO - Страницу обновилnogoeva
-2024-03-27 03:22:52,684 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:22:54,262 - INFO - Страницу обновилstesh
-2024-03-27 03:23:13,854 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:23:17,444 - INFO - Страницу обновилnogoeva
-2024-03-27 03:23:53,442 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:23:55,031 - INFO - Страницу обновилstesh
-2024-03-27 03:24:06,609 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:24:08,194 - INFO - Страницу обновилnogoeva
-2024-03-27 03:52:43,200 - INFO - Проверки не было - 
-没有找到元素。
-method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 03:52:53,286 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:53:28,998 - INFO - Проверки не было - 
-没有找到元素。
-method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 03:53:39,197 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:53:41,790 - INFO - Страницу обновилstesh
-2024-03-27 03:53:48,856 - INFO - Страницу обновилnogoeva
-2024-03-27 03:55:23,857 - ERROR - В функции check_available_date - dictionary changed size during iteration
-2024-03-27 03:55:26,924 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:55:29,510 - INFO - Страницу обновилstesh
-2024-03-27 03:56:06,570 - INFO - Проверки не было - 
-没有找到元素。
-method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 03:56:16,757 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 03:56:57,510 - ERROR - В функции check_available_date - dictionary keys changed during iteration
-2024-03-27 03:57:32,527 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
-2024-03-27 04:13:49,665 - INFO - Проверки не было - 
-没有找到元素。
-method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:13:59,830 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:14:18,157 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
-2024-03-27 04:15:00,007 - INFO - Страницу обновилstesh
-2024-03-27 04:16:53,171 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:16:54,745 - INFO - Страницу обновилstesh
-2024-03-27 04:18:32,904 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:18:35,491 - INFO - Страницу обновилstesh
-2024-03-27 04:20:11,646 - ERROR - В функции check_available_date - 
+2024-03-29 00:49:37,278 - INFO - Процесс для nogoeva был запущен
+2024-03-29 00:50:14,023 - INFO - Процесс для stesh был запущен
+2024-03-29 00:50:24,512 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:50:59,097 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:51:33,135 - INFO - Страницу обновил - nogoeva
+2024-03-29 00:52:58,271 - INFO - Страницу обновил - stesh
+2024-03-29 00:53:12,211 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:53:13,776 - INFO - Страницу обновил - nogoeva
+2024-03-29 00:54:33,362 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:54:36,940 - INFO - Страницу обновил - stesh
+2024-03-29 00:54:46,864 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:55:06,982 - INFO - Страницу обновил - nogoeva
+2024-03-29 00:56:14,024 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 00:56:16,595 - INFO - Страницу обновил - stesh
+2024-03-29 00:56:46,111 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
 args: {'locator': '@class:leftPanelText', 'index': 1}
-2024-03-27 04:20:49,334 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
-2024-03-27 04:26:10,116 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:27:10,204 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
-2024-03-27 04:28:22,864 - INFO - Страницу обновилnogoeva
-2024-03-27 04:32:05,832 - INFO - Проверки не было - 
+2024-03-29 00:56:53,843 - ERROR - Infinity polling: polling exited
+2024-03-29 00:56:53,844 - ERROR - Break infinity polling
+2024-03-29 01:36:28,253 - ERROR - Infinity polling: polling exited
+2024-03-29 01:36:28,254 - ERROR - Break infinity polling
+2024-03-29 01:45:09,326 - INFO - Процесс для stesh был запущен
+2024-03-29 01:45:44,140 - INFO - Процесс для nogoeva был запущен
+2024-03-29 01:45:53,095 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 01:46:31,666 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 01:48:15,832 - INFO - Страницу обновил - stesh
+2024-03-29 01:49:19,881 - INFO - Страницу обновил - nogoeva
+2024-03-29 01:49:43,914 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 01:49:46,486 - INFO - Страницу обновил - stesh
+2024-03-29 01:50:47,290 - ERROR - Infinity polling exception: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+2024-03-29 01:50:47,296 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 370, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 90, in run
+    task(*args, **kwargs)
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/chrome_driver/dris.py", line 66, in get_help
+    bot.send_message(
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1549, in send_message
+    apihelper.send_message(
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/apihelper.py", line 156, in _make_request
+    result = _get_req_session().request(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+
+2024-03-29 01:51:03,635 - ERROR - Infinity polling exception: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+2024-03-29 01:51:03,640 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 537, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connection.py", line 466, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/usr/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/socket.py", line 706, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 1311, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/ssl.py", line 1167, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/util/retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 539, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/urllib3/connectionpool.py", line 370, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 90, in run
+    task(*args, **kwargs)
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/chrome_driver/dris.py", line 66, in get_help
+    bot.send_message(
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1549, in send_message
+    apihelper.send_message(
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/apihelper.py", line 156, in _make_request
+    result = _get_req_session().request(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/requests/adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
+
+2024-03-29 01:51:09,959 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 01:51:13,536 - INFO - Страницу обновил - nogoeva
+2024-03-29 01:51:18,570 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 01:52:21,966 - INFO - Страницу обновил - stesh
+2024-03-29 01:52:57,687 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:32:15,981 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:32:46,681 - INFO - Проверки не было - 
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 01:54:21,121 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:32:48,953 - INFO - Страницу обновилUSA2024!
-2024-03-27 04:32:56,856 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:33:55,300 - INFO - Страницу обновилnogoeva
-2024-03-27 04:34:52,164 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:34:53,747 - INFO - Страницу обновилUSA2024!
-2024-03-27 04:35:29,487 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:35:33,085 - INFO - Страницу обновилnogoeva
-2024-03-27 04:39:23,992 - INFO - Проверки не было - 
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 01:56:27,081 - ERROR - Infinity polling: polling exited
+2024-03-29 01:56:27,081 - ERROR - Break infinity polling
+2024-03-29 02:25:33,252 - ERROR - Infinity polling exception: start_process() takes 2 positional arguments but 3 were given
+2024-03-29 02:25:33,258 - ERROR - Exception traceback:
+Traceback (most recent call last):
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "/home/roman/projects/bot_register_date/env/lib/python3.11/site-packages/telebot/util.py", line 90, in run
+    task(*args, **kwargs)
+TypeError: start_process() takes 2 positional arguments but 3 were given
+
+2024-03-29 02:26:31,410 - ERROR - Infinity polling: polling exited
+2024-03-29 02:26:31,410 - ERROR - Break infinity polling
+2024-03-29 02:26:58,203 - INFO - Процесс для nogoeva был запущен
+2024-03-29 02:27:46,285 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 02:28:30,095 - INFO - Страницу обновил - nogoeva
+2024-03-29 02:30:11,190 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 02:30:14,769 - INFO - Страницу обновил - nogoeva
+2024-03-29 02:31:55,855 - INFO - First Available Appointment Is Tuesday November 26, 2024.
+2024-03-29 02:32:22,808 - INFO - Страницу обновил - nogoeva
+2024-03-29 02:34:18,953 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:39:34,122 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:40:17,572 - INFO - Проверки не было - 
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 02:34:34,893 - ERROR - Infinity polling: polling exited
+2024-03-29 02:34:34,893 - ERROR - Break infinity polling
+2024-03-29 02:53:51,784 - ERROR - Infinity polling: polling exited
+2024-03-29 02:53:51,784 - ERROR - Break infinity polling
+2024-03-29 02:55:50,357 - INFO - Процесс для nogoeva был запущен
+2024-03-29 02:56:47,588 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:40:24,374 - INFO - Страницу обновилnogoeva
-2024-03-27 04:40:27,783 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:40:35,996 - INFO - Страницу обновилstesh
-2024-03-27 04:41:44,382 - ERROR - В функции check_available_date - dictionary changed size during iteration
-2024-03-27 04:42:12,997 - ERROR - В функции check_available_date - 与页面的连接已断开。
-2024-03-27 04:43:40,168 - ERROR - Infinity polling: polling exited
-2024-03-27 04:43:40,170 - ERROR - Break infinity polling
-2024-03-27 04:45:31,053 - INFO - Проверки не было - 
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 02:57:45,763 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:45:41,156 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:45:44,658 - INFO - Страницу обновилstesh
-2024-03-27 04:47:10,668 - ERROR - В функции check_available_date - dictionary changed size during iteration
-2024-03-27 04:47:13,192 - INFO - Проверки не было - 
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 02:58:11,592 - ERROR - Ошибка в record_in_date - 
+没有找到元素。
+args: {'locator': None}
+2024-03-29 02:58:14,693 - ERROR - Infinity polling: polling exited
+2024-03-29 02:58:14,693 - ERROR - Break infinity polling
+2024-03-29 03:00:32,033 - INFO - Процесс для nogoeva был запущен
+2024-03-29 03:01:34,018 - ERROR - Ошибка в record_in_date - 
 没有找到元素。
 method: ele()
-args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
-2024-03-27 04:47:23,316 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-27 04:47:25,900 - INFO - Страницу обновилnogoeva
+args: {'locator': '@class:leftPanelText', 'index': 1}
+2024-03-29 03:01:59,683 - ERROR - Ошибка в record_in_date - 
+没有找到元素。
+args: {'locator': None}
+2024-03-29 03:05:21,328 - ERROR - Infinity polling: polling exited
+2024-03-29 03:05:21,329 - ERROR - Break infinity polling
+2024-03-29 03:25:23,505 - INFO - Процесс для nogoeva был запущен
+2024-03-29 03:26:12,049 - ERROR - Infinity polling: polling exited
+2024-03-29 03:26:12,050 - ERROR - Break infinity polling
+2024-03-29 03:26:49,671 - INFO - Процесс для nogoeva был запущен
+2024-03-29 03:28:20,218 - ERROR - Infinity polling: polling exited
+2024-03-29 03:28:20,219 - ERROR - Break infinity polling
+2024-03-29 03:28:56,569 - ERROR - Infinity polling: polling exited
+2024-03-29 03:28:56,571 - ERROR - Break infinity polling
+2024-03-29 03:29:53,037 - INFO - Процесс для rus был запущен
+2024-03-29 03:32:10,023 - ERROR - Infinity polling: polling exited
+2024-03-29 03:32:10,024 - ERROR - Break infinity polling
+2024-03-29 03:52:25,347 - INFO - Процесс для rus был запущен
+2024-03-29 03:53:52,096 - ERROR - Infinity polling: polling exited
+2024-03-29 03:53:52,097 - ERROR - Break infinity polling
+2024-03-29 04:06:59,383 - ERROR - Infinity polling: polling exited
+2024-03-29 04:06:59,383 - ERROR - Break infinity polling
+2024-03-29 04:22:56,834 - INFO - Процесс для rus был запущен
+2024-03-29 04:23:34,495 - INFO - На сайте нет информации о свободной дате, ожидание...
+2024-03-29 04:23:37,199 - INFO - Процесс для stesh был запущен
+2024-03-29 04:24:16,689 - INFO - На сайте нет информации о свободной дате, ожидание...
+2024-03-29 04:26:52,978 - INFO - Процесс для tata был запущен
+2024-03-29 04:27:32,206 - INFO - На сайте нет информации о свободной дате, ожидание...
+2024-03-29 04:46:24,286 - ERROR - Infinity polling: polling exited
+2024-03-29 04:46:24,286 - ERROR - Break infinity polling
+2024-03-29 04:52:03,701 - INFO - Процесс для tata был запущен
+2024-03-29 04:52:41,295 - INFO - На сайте нет информации о свободной дате, ожидание...
+2024-03-29 04:58:52,613 - ERROR - Infinity polling: polling exited
+2024-03-29 04:58:52,614 - ERROR - Break infinity polling
+2024-03-29 05:17:00,027 - INFO - Процесс для tata был запущен
+2024-03-29 05:17:40,579 - INFO - На сайте нет информации о свободной дате, ожидание...
+2024-03-29 05:24:27,943 - ERROR - Ошибка в record_in_date - 
+没有找到元素。
+args: {'locator': None}
+2024-03-29 05:24:28,530 - ERROR - Процесс для tata был завершён
+2024-03-29 05:24:57,788 - ERROR - Infinity polling: polling exited
+2024-03-29 05:24:57,788 - ERROR - Break infinity polling
