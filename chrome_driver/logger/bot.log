@@ -1,16 +1,112 @@
-
-2024-03-23 23:11:29,853 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-23 23:13:16,191 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-23 23:15:25,948 - INFO - First Available Appointment Is Thursday October 31, 2024.
-2024-03-23 23:17:40,427 - ERROR - 
+2024-03-27 03:19:10,705 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:19:40,879 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 03:19:51,032 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:19:52,618 - INFO - Страницу обновилnogoeva
+2024-03-27 03:20:21,059 - INFO - Страницу обновилstesh
+2024-03-27 03:20:41,676 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:20:45,270 - INFO - Страницу обновилnogoeva
+2024-03-27 03:21:11,186 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:21:13,776 - INFO - Страницу обновилstesh
+2024-03-27 03:21:41,410 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:21:45,010 - INFO - Страницу обновилnogoeva
+2024-03-27 03:21:57,976 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:22:01,575 - INFO - Страницу обновилstesh
+2024-03-27 03:22:28,139 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:22:30,729 - INFO - Страницу обновилnogoeva
+2024-03-27 03:22:52,684 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:22:54,262 - INFO - Страницу обновилstesh
+2024-03-27 03:23:13,854 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:23:17,444 - INFO - Страницу обновилnogoeva
+2024-03-27 03:23:53,442 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:23:55,031 - INFO - Страницу обновилstesh
+2024-03-27 03:24:06,609 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:24:08,194 - INFO - Страницу обновилnogoeva
+2024-03-27 03:52:43,200 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 03:52:53,286 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:53:28,998 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 03:53:39,197 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:53:41,790 - INFO - Страницу обновилstesh
+2024-03-27 03:53:48,856 - INFO - Страницу обновилnogoeva
+2024-03-27 03:55:23,857 - ERROR - В функции check_available_date - dictionary changed size during iteration
+2024-03-27 03:55:26,924 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:55:29,510 - INFO - Страницу обновилstesh
+2024-03-27 03:56:06,570 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 03:56:16,757 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 03:56:57,510 - ERROR - В функции check_available_date - dictionary keys changed during iteration
+2024-03-27 03:57:32,527 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
+2024-03-27 04:13:49,665 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:13:59,830 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:14:18,157 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
+2024-03-27 04:15:00,007 - INFO - Страницу обновилstesh
+2024-03-27 04:16:53,171 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:16:54,745 - INFO - Страницу обновилstesh
+2024-03-27 04:18:32,904 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:18:35,491 - INFO - Страницу обновилstesh
+2024-03-27 04:20:11,646 - ERROR - В функции check_available_date - 
 没有找到元素。
 method: ele()
 args: {'locator': '@class:leftPanelText', 'index': 1}
-2024-03-23 23:18:31,560 - INFO - First Available Appointment Is Monday March 25, 2024.
-2024-03-23 23:18:31,560 - INFO - Открытая дата на Март
-2024-03-23 23:18:49,535 - INFO - Нажата кнопка записи в first_date
-2024-03-23 23:19:19,570 - ERROR - Ошибка при выполнении record_in_data - HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=30)
-2024-03-23 23:20:25,178 - ERROR - 
+2024-03-27 04:20:49,334 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
+2024-03-27 04:26:10,116 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:27:10,204 - ERROR - Ошибка в record_in_date - 与页面的连接已断开。
+2024-03-27 04:28:22,864 - INFO - Страницу обновилnogoeva
+2024-03-27 04:32:05,832 - INFO - Проверки не было - 
 没有找到元素。
 method: ele()
-args: {'locator': '@class:leftPanelText', 'index': 1}
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:32:15,981 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:32:46,681 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:32:48,953 - INFO - Страницу обновилUSA2024!
+2024-03-27 04:32:56,856 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:33:55,300 - INFO - Страницу обновилnogoeva
+2024-03-27 04:34:52,164 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:34:53,747 - INFO - Страницу обновилUSA2024!
+2024-03-27 04:35:29,487 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:35:33,085 - INFO - Страницу обновилnogoeva
+2024-03-27 04:39:23,992 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:39:34,122 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:40:17,572 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:40:24,374 - INFO - Страницу обновилnogoeva
+2024-03-27 04:40:27,783 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:40:35,996 - INFO - Страницу обновилstesh
+2024-03-27 04:41:44,382 - ERROR - В функции check_available_date - dictionary changed size during iteration
+2024-03-27 04:42:12,997 - ERROR - В функции check_available_date - 与页面的连接已断开。
+2024-03-27 04:43:40,168 - ERROR - Infinity polling: polling exited
+2024-03-27 04:43:40,170 - ERROR - Break infinity polling
+2024-03-27 04:45:31,053 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:45:41,156 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:45:44,658 - INFO - Страницу обновилstesh
+2024-03-27 04:47:10,668 - ERROR - В функции check_available_date - dictionary changed size during iteration
+2024-03-27 04:47:13,192 - INFO - Проверки не было - 
+没有找到元素。
+method: ele()
+args: {'locator': '@allow:cross-origin-isolated', 'index': 1}
+2024-03-27 04:47:23,316 - INFO - First Available Appointment Is Thursday October 31, 2024.
+2024-03-27 04:47:25,900 - INFO - Страницу обновилnogoeva
