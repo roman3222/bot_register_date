@@ -31,8 +31,6 @@ date_for_users = manager.dict()
 
 check_date = []
 
-user_states = {}
-
 months_list = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -43,8 +41,10 @@ lock_browser = multiprocessing.Lock()
 
 @bot.message_handler(commands=['start'])
 def get_login(message):
-    bot.send_message(message.chat.id, f'Укажите адрес электронной почты для авторизации')
-    bot.register_next_step_handler(message, get_password)
+    user_id = os.getenv('developer_id')
+    if message.from_user.id == int(user_id):
+        bot.send_message(message.chat.id, f'Укажите адрес электронной почты для авторизации')
+        bot.register_next_step_handler(message, get_password)
 
 
 def cancel_act(message):
@@ -64,11 +64,13 @@ def get_password(message):
 
 @bot.message_handler(commands=['help'])
 def get_help(message: Message):
-    bot.send_message(
-        message.chat.id,
-        '/start - Старт бота\n/change_date - Изменить дату для пользователя\n/show_active_users - '
-        'Просмотр активных пользователей\n/menu - Меню с командами'
-    )
+    user_id = os.getenv('developer_id')
+    if message.from_user.id == int(user_id):
+        bot.send_message(
+            message.chat.id,
+            '/start - Старт бота\n/change_date - Изменить дату для пользователя\n/show_active_users - '
+            'Просмотр активных пользователей\n/menu - Меню с командами'
+        )
 
 
 def get_date_range(message, user_data):
@@ -127,57 +129,72 @@ def get_applicants(message, user_data):
 
 @bot.message_handler(commands=['show_active_users'])
 def get_active_users(message: Message):
-    for user, date in date_for_users.items():
-        bot.send_message(
-            message.chat.id,
-            f'{user} - {date}\n'
-        )
+    user_id = os.getenv('developer_id')
+    if message.from_user.id == int(user_id):
+        for user, date in date_for_users.items():
+            bot.send_message(
+                message.chat.id,
+                f'{user} - {date}\n'
+            )
 
 
 @bot.message_handler(commands=['file'])
 def get_log_file(message):
     user_id = os.getenv('developer_id')
-    bot.send_document(user_id, 'chrome_driver/logger/bot.log')
+    if message.from_user.id == int(user_id):
+        file = 'logger/bot.log'
+        with open(file, 'rb') as f:
+            bot.send_document(user_id, f)
 
 
 @bot.message_handler(commands=['change_date'])
-def change_date(message):
-    global date_for_users
+def change_date(message: Message):
+    """
+    Изменение даты для пользователя
+    :param message: объект Message
+    """
+    user_id = os.getenv('developer_id')
+    if message.from_user.id == int(user_id):
+        global date_for_users
 
-    if cancel_act(message):
-        bot.register_next_step_handler(message, show_menu)
-        return
-    keyboard = types.ReplyKeyboardMarkup(row_width=1)
-    for user in date_for_users.keys():
-        button = types.KeyboardButton(user)
-        keyboard.add(button)
-        if date_for_users:
-            bot.send_message(
-                message.chat.id,
-                'Укажите username для которого вы хотите изменить дату',
-                reply_markup=keyboard
-            )
-            bot.register_next_step_handler(message, check_username)
-
-        else:
-            bot.send_message(message.chat.id, 'Нет активных пользователей')
+        if cancel_act(message):
             bot.register_next_step_handler(message, show_menu)
             return
+        keyboard = types.ReplyKeyboardMarkup(row_width=1)
+        for user in date_for_users.keys():
+            button = types.KeyboardButton(user)
+            keyboard.add(button)
+            if date_for_users:
+                bot.send_message(
+                    message.chat.id,
+                    'Укажите username для которого вы хотите изменить дату',
+                    reply_markup=keyboard
+                )
+                bot.register_next_step_handler(message, check_username)
+
+            else:
+                bot.send_message(message.chat.id, 'Нет активных пользователей')
+                bot.register_next_step_handler(message, show_menu)
+                return
 
 
 def check_username(message):
     if cancel_act(message):
         bot.register_next_step_handler(message, show_menu)
         return
-    if cancel_act(message):
-        bot.register_next_step_handler(message, show_menu)
     else:
         username = message.text
         bot.send_message(message.chat.id, 'Пожалуйста, введите дату в формате May 12, 24, June 1, 21')
         bot.register_next_step_handler(message, check_date_username, username)
 
 
-def check_date_username(message, username):
+def check_date_username(message: Message, username: str):
+    """
+    Проверка формата даты
+    :param message: объект Message
+    :param username: имя пользователя для которого изменяем дату
+    :return:
+    """
     global date_for_users
     if cancel_act(message):
         bot.register_next_step_handler(message, show_menu)
@@ -197,22 +214,24 @@ def check_date_username(message, username):
 
 @bot.message_handler(commands=['menu'])
 def show_menu(message):
-    # Создаем клавиатуру с кнопками команд
-    keyboard = types.ReplyKeyboardMarkup(row_width=1)
-    button1 = types.KeyboardButton('/start')
-    button2 = types.KeyboardButton('/help')
-    button3 = types.KeyboardButton('/cancel')
-    button4 = types.KeyboardButton('/show_active-users')
-    button5 = types.KeyboardButton('/change_date')
-    keyboard.add(button1, button2, button3, button4, button5)
+    user_id = os.getenv('developer_id')
+    if message.from_user.id == int(user_id):
+        keyboard = types.ReplyKeyboardMarkup(row_width=1)
+        button1 = types.KeyboardButton('/start')
+        button2 = types.KeyboardButton('/help')
+        button3 = types.KeyboardButton('/cancel')
+        button4 = types.KeyboardButton('/show_active_users')
+        button5 = types.KeyboardButton('/change_date')
+        keyboard.add(button1, button2, button3, button4, button5)
 
-    # Отправляем сообщение с клавиатурой
-    bot.send_message(message.chat.id, "Меню:", reply_markup=keyboard)
+        bot.send_message(message.chat.id, "Меню:", reply_markup=keyboard)
 
 
 def input_authorization(driver: ChromiumPage, user_data: dict):
     """
     Авторизация аккаунта
+    :param driver: объект класса ChromiumPage
+    :param user_data: словарь с данными пользователя
     :return:
     """
     driver.wait.ele_loaded('#id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
@@ -232,12 +251,11 @@ def check_cloudflare(driver: ChromiumPage):
     """
     Проверка cloudflare
     :param driver: объект класса ChromiumPage
-    :return:
     """
     try:
         driver.wait.ele_loaded('#allow:cross-origin-isolated')
         test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
-        driver.wait.ele_loaded('#class:mark')
+        driver.wait.ele_loaded('#class:mark', timeout=3)
         button = test.ele('@class:mark')
         button.click()
     except ElementNotFoundError as error:
@@ -247,8 +265,7 @@ def check_cloudflare(driver: ChromiumPage):
 def get_options_date(user_data: dict):
     """
     Функция для записи диапазона дат для аккаунтов
-    :param user_data:
-    :return:
+    :param user_data: словарь с данными пользователя
     """
     global date_for_users
 
@@ -266,6 +283,13 @@ def get_list_date(date: dict, user_data: dict) -> list:
 
 
 def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> bool:
+    """
+    Проверка доступной даты на сайте
+    :param driver: объект ChromiumPage
+    :param user_data: словарь данных пользователя
+    :param message: объект Message
+    :return: True or False
+    """
     if driver.wait.ele_loaded('tag:div@class=message errorM3'):
         action_finally(driver, user_data, message)
         bot.send_message(
@@ -275,8 +299,7 @@ def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> boo
         while driver.wait.ele_loaded('#class:leftPanelText') is not True:
             if driver.wait.ele_loaded('tag:h1@text()=Sorry, you have been blocked'):
                 driver.refresh()
-            lock_browser.acquire()
-            try:
+            with lock_browser:
                 logging.info("Информация о свободной дате отсутствует, ожидаем ...")
 
                 time.sleep(random.randint(70, 115))
@@ -284,17 +307,15 @@ def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> boo
                 logging.info(f"В check_is_ele страницу обновил {user_data['username']}")
                 if driver.wait.ele_loaded('#class:leftPanelText'):
                     return True
-            finally:
-                lock_browser.release()
 
 
-def check_date_on_page(text_ele, date_users: dict, user_data: dict) -> bool:
+def check_date_on_page(text_ele: str, date_users: dict, user_data: dict) -> bool:
     """
     Проверка совпадения даты
-    :param text_ele:
-    :param date_users:
-    :param user_data:
-    :return:
+    :param text_ele: Информация о доступной дате
+    :param date_users: словарь с датами пользователей
+    :param user_data: словарь с данными пользователя
+    :return: True or False
     """
     date = text_ele.translate(str.maketrans('', '', string.punctuation))
     date_list = date.split(' ')
@@ -311,11 +332,12 @@ def check_date_on_page(text_ele, date_users: dict, user_data: dict) -> bool:
         return True
 
 
-def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message) -> bool:
+def check_available_date(date_users: dict, driver: ChromiumPage(), user_data) -> bool:
     """
     Ослеживание даты
     :date_users: global dict(date_for_users)
-    :driver: objects browser
+    :driver: objects ChromiumPage
+    : user_data: словарь с данными пользователя
     """
     global users
     while True:
@@ -349,6 +371,7 @@ def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, me
 def page_calendar(driver: ChromiumPage):
     """
     Переход на страницу с календарём
+    :param driver: объект ChromiumPage
     :return:
     """
 
@@ -361,9 +384,9 @@ def page_calendar(driver: ChromiumPage):
 def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message) -> bool:
     """
     Проврка наличия свободных мест на выделеной дате
-    :param driver:
-    :param user_data:
-    :param message:
+    :param driver: объект ChromiumPage
+    :param user_data: словарь с данными пользователя
+    :param message: объект Message
     :return:
     """
     global date_for_users
@@ -375,8 +398,6 @@ def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message
     if month_calendar not in month_user:
         logging.info(f"В first_available для {user_data['username']} доступной даты не обнаружено")
         driver.actions.click('tag:a@@text():Home')
-        time.sleep(7)
-        driver.refresh()
         check_is_ele(driver, user_data, message)
         return False
 
@@ -401,6 +422,10 @@ def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message
 def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=60):
     """
     Функция для получения всех свободных дат
+    :param driver: объект ChromiumPage
+    :param user_data: словарь с данными пользователя
+    :param message: объект Message
+    :param retries: int(колличество попыток)
     :return:
     """
     global check_date
@@ -435,7 +460,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=
                                 driver.actions.click('tag:input@type:checkbox')
                                 parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
                                 schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
-                                # schedule_button.click()
+                                # schedule_button
                                 logging.info('Нажата кнопка записи в next_date')
                                 name = user_data['username']
                                 bot.send_message(
@@ -452,8 +477,6 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=
         if not should_break:
             logging.info(f"Для {user_data['username']} не найдено даты")
             driver.actions.click('tag:a@@text():Home')
-            time.sleep(7)
-            driver.refresh()
             check_is_ele(driver, user_data, message)
     except Exception:
         if retries > 0:
@@ -463,6 +486,13 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=
 
 
 def action_finally(driver: ChromiumPage, user_data: dict, message, retries=10):
+    """
+    Выполение финальных действий в случае успеха
+    :param driver: объект ChromiumPage
+    :param user_data: словарь с данными пользователя
+    :param message: объект Message
+    :param retries: int(колличество попыток)
+    """
     global users
     global date_for_users
     try:
@@ -483,7 +513,6 @@ def record_in_date(message, user_data):
     Отслеживание и запись на свободную дату
     :param message: объект Message
     :param user_data: словарь с данными пользователя
-    :return:
     """
     global users
     global date_for_users
@@ -498,7 +527,7 @@ def record_in_date(message, user_data):
         input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
         check_cloudflare(users[username])  # Проверка cloudflare
         if check_is_ele(users[username], user_data, message):
-            if check_available_date(date_for_users, users[username], user_data, message):
+            if check_available_date(date_for_users, users[username], user_data):
                 page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
                 if record_in_first_date(users[username], user_data, message):  # Если первая дата подходит по критериям
                     action_finally(users[username], user_data, message)
@@ -514,14 +543,25 @@ def record_in_date(message, user_data):
         get_middle(message, user_data, 'restart')
 
 
-def get_middle(message, user_data, command):
+def get_middle(message: Message, user_data: dict, command: str):
+    """
+    Промежуточная функция для запуска нового процесса или record_in_date в том же процессе
+    :param message: объект Message
+    :param user_data: словарь с данными пользователя
+    :param command: команда restart
+    """
     if command == 'restart':
         record_in_date(message, user_data)
     else:
         start_process(message, user_data)
 
 
-def start_process(message, user_data):
+def start_process(message: Message, user_data: dict):
+    """
+    Запуск record_in_date в отдельном процессе
+    :param message: объект Message
+    :param user_data: словарь с данными пользователя
+    """
     global users
     if cancel_act(message):
         bot.register_next_step_handler(message, show_menu)
