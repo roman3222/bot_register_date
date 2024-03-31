@@ -38,6 +38,8 @@ months_list = [
 
 lock_browser = multiprocessing.Lock()
 
+next_step_signal = multiprocessing.Event()
+
 
 @bot.message_handler(commands=['start'])
 def get_login(message):
@@ -234,6 +236,8 @@ def input_authorization(driver: ChromiumPage, user_data: dict):
     :param user_data: словарь с данными пользователя
     :return:
     """
+    if driver.ele('tag:h2@text()=Подтвердите, что вы человек, выполнив указанное действие.'):
+        check_cloudflare(driver)
     driver.wait.ele_loaded('#id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
     login_input = driver.actions.click('@id:loginPage:SiteTemplate:siteLogin:loginComponent:loginForm:username')
     login_input.input(user_data['login'])
@@ -253,10 +257,11 @@ def check_cloudflare(driver: ChromiumPage):
     :param driver: объект класса ChromiumPage
     """
     try:
-        driver.wait.ele_loaded('#allow:cross-origin-isolated')
-        test = driver.ele('@allow:cross-origin-isolated').ele('@class:ctp-checkbox-label')
-        driver.wait.ele_loaded('#class:mark', timeout=3)
-        button = test.ele('@class:mark')
+        # parent = driver.ele('tag:iframe@allow:cross-origin-isolated; fullscreen')
+        # child = parent.ele('tag:label@class:ctp-checkbox-label')
+        driver.wait.ele_loaded('#tag:iframe@src:')
+        parent = driver.ele('tag:iframe@src:')
+        button = parent.ele('tag:span@class:mark')
         button.click()
     except ElementNotFoundError as error:
         logging.info(f"Проверки не было - {error}")
@@ -264,7 +269,7 @@ def check_cloudflare(driver: ChromiumPage):
 
 def get_options_date(user_data: dict):
     """
-    Функция для записи диапазона дат для аккаунтов
+    Запись даты в словарь date_for_users
     :param user_data: словарь с данными пользователя
     """
     global date_for_users
@@ -300,12 +305,18 @@ def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> boo
             if driver.wait.ele_loaded('tag:h1@text()=Sorry, you have been blocked'):
                 driver.refresh()
             with lock_browser:
+                if next_step_signal.is_set():
+                    logging.info(f"{user_data['username']} - поймал сигнал")
+                    return True
+                logging.info(f"{user_data['username']} - зашёл в блокировку")
                 logging.info("Информация о свободной дате отсутствует, ожидаем ...")
 
                 time.sleep(random.randint(70, 115))
                 driver.refresh()
                 logging.info(f"В check_is_ele страницу обновил {user_data['username']}")
-                if driver.wait.ele_loaded('#class:leftPanelText'):
+                logging.info(f"{user_data['username']} вышел из блокировки")
+                if driver.wait.ele_loaded('@class:leftPanelText'):
+                    next_step_signal.set()
                     return True
 
 
@@ -332,40 +343,40 @@ def check_date_on_page(text_ele: str, date_users: dict, user_data: dict) -> bool
         return True
 
 
-def check_available_date(date_users: dict, driver: ChromiumPage(), user_data) -> bool:
+def check_available_date(date_users: dict, driver: ChromiumPage(), user_data, message) -> bool:
     """
     Ослеживание даты
     :date_users: global dict(date_for_users)
     :driver: objects ChromiumPage
-    : user_data: словарь с данными пользователя
+    :user_data: словарь с данными пользователя
     """
     global users
     while True:
-        if driver.wait.ele_loaded('tag:h1@text()=Sorry, you have been blocked'):
+        if driver.wait.ele_loaded('tag:h1@text()=Sorry, you have been blocked', timeout=4):
             driver.refresh()
-        driver.wait.ele_loaded('#class:leftPanelText', timeout=2)
         give_date = driver.ele('@class:leftPanelText').text
-        logging.info(f"Успешная вторизация {user_data['username']}")
-        logging.info(f'{give_date}')
         if check_date_on_page(give_date, date_users, user_data):
+            logging.info(f"Для {user_data['username']} есть дата {give_date}")
             return True
         else:
-            lock_browser.acquire()
-            try:
+            with lock_browser:
+                logging.info(f"{user_data['username']} зашёл в блокировку")
                 offset_x = random.randint(300, 500)
                 offset_y = random.randint(250, 300)
                 cont = random.randint(5, 10)
                 driver.actions.move(offset_x=offset_x, offset_y=offset_y, duration=cont)
                 driver.actions.up(random.randint(20, 50))
-                time.sleep(random.randint(75, 103))
+                time.sleep(random.randint(65, 94))
                 driver.refresh()
-                text = driver.ele('@class:leftPanelText').text
-                if check_date_on_page(text, date_users, user_data):
-                    return True
                 logging.info(f"Страницу обновил - {user_data['username']}")
-                logging.info(f'{text}')
-            finally:
-                lock_browser.release()
+
+            logging.info(f"{user_data['username']} вышел из блокировки")
+            driver.wait.ele_loaded('#class:leftPanelText', timeout=3)
+            text = driver.ele('@class:leftPanelText').text
+            if check_date_on_page(text, date_users, user_data):
+                logging.info(f"Для {user_data['username']} есть дата {give_date}")
+                return True
+            logging.info(f'{text}')
 
 
 def page_calendar(driver: ChromiumPage):
@@ -374,11 +385,11 @@ def page_calendar(driver: ChromiumPage):
     :param driver: объект ChromiumPage
     :return:
     """
-
     driver.wait.ele_loaded('#tag:a@class=container')
     driver.actions.click('tag:a@@text():Continue')
-    driver.actions.click('tag:input@type=radio')
-    driver.actions.click('tag:input@class=button continue ui-button ui-widget ui-state-default ui-corner-all')
+    if driver.ele('tag:input@type=radio'):
+        driver.actions.click('tag:input@type=radio')
+        driver.actions.click('tag:input@class=button continue ui-button ui-widget ui-state-default ui-corner-all')
 
 
 def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message) -> bool:
@@ -409,7 +420,7 @@ def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message
         driver.actions.click('tag:input@type:checkbox')
         parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
         schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
-        # schedule_button.click()
+        schedule_button.click()
         logging.info('Нажата кнопка записи в first_date')
         name = user_data['username']
         bot.send_message(message.chat.id, f"{name} был записан на {free_date}")
@@ -460,7 +471,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=
                                 driver.actions.click('tag:input@type:checkbox')
                                 parent_ele = driver.ele('tag:span@id:thePage:SiteTemplate:theForm:calendarTableMessage')
                                 schedule_button = parent_ele.ele('tag:input@id:thePage:SiteTemplate:theForm:addItem')
-                                # schedule_button
+                                schedule_button.click()
                                 logging.info('Нажата кнопка записи в next_date')
                                 name = user_data['username']
                                 bot.send_message(
@@ -527,13 +538,14 @@ def record_in_date(message, user_data):
         input_authorization(users[username], user_data)  # Ввод данных авторизации, нажимаем кнопку войти
         check_cloudflare(users[username])  # Проверка cloudflare
         if check_is_ele(users[username], user_data, message):
-            if check_available_date(date_for_users, users[username], user_data):
+            if check_available_date(date_for_users, users[username], user_data, message):
                 page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
                 if record_in_first_date(users[username], user_data, message):  # Если первая дата подходит по критериям
                     action_finally(users[username], user_data, message)
                 if record_in_next_date(users[username], message, user_data):
                     action_finally(users[username], user_data, message)
     except Exception as error:
+        next_step_signal.clear()
         logging.error(f"Ошибка в record_in_date - {error}")
         username = user_data['username']
         users[username].quit()
