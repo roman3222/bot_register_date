@@ -1,7 +1,3 @@
-import random
-from fake_useragent import UserAgent
-from DrissionPage import ChromiumPage
-
 
 
 proxy = [
@@ -16,7 +12,6 @@ proxy = [
     'http://45.129.171.66:8000',
     'http://45.129.171.165:8000',
 ]
-
 
 acts = [
     'tag:a@text()=Update Profile',

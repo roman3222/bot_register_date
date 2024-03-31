@@ -297,6 +297,7 @@ def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> boo
     """
     if driver.wait.ele_loaded('tag:div@class=message errorM3'):
         action_finally(driver, user_data, message)
+        logging.info(f"Не верные данные для {user_data['username']}")
         bot.send_message(
             message.chat.id,
             f"Не верно указан логин или пароль для {user_data['username']}, попробуйте снова")
@@ -305,12 +306,11 @@ def check_is_ele(driver: ChromiumPage, user_data: dict, message: Message) -> boo
             if driver.wait.ele_loaded('tag:h1@text()=Sorry, you have been blocked'):
                 driver.refresh()
             with lock_browser:
+                logging.info(f"{user_data['username']} - зашёл в блокировку")
                 if next_step_signal.is_set():
                     logging.info(f"{user_data['username']} - поймал сигнал")
                     return True
-                logging.info(f"{user_data['username']} - зашёл в блокировку")
                 logging.info("Информация о свободной дате отсутствует, ожидаем ...")
-
                 time.sleep(random.randint(70, 115))
                 driver.refresh()
                 logging.info(f"В check_is_ele страницу обновил {user_data['username']}")
@@ -409,7 +409,6 @@ def record_in_first_date(driver: ChromiumPage, user_data: dict, message: Message
     if month_calendar not in month_user:
         logging.info(f"В first_available для {user_data['username']} доступной даты не обнаружено")
         driver.actions.click('tag:a@@text():Home')
-        check_is_ele(driver, user_data, message)
         return False
 
     available = driver.ele('@id:thePage:SiteTemplate:theForm:calendarTableMessage')
@@ -488,7 +487,7 @@ def record_in_next_date(driver: ChromiumPage, message, user_data: dict, retries=
         if not should_break:
             logging.info(f"Для {user_data['username']} не найдено даты")
             driver.actions.click('tag:a@@text():Home')
-            check_is_ele(driver, user_data, message)
+            return False
     except Exception:
         if retries > 0:
             record_in_next_date(driver, message, user_data, retries - 1)
@@ -532,6 +531,7 @@ def record_in_date(message, user_data):
         username = user_data['username']
         options = ChromiumOptions().auto_port(True)
         options.set_proxy(random.choice(proxy))
+        options.headless(on_off=True)
         users[username] = ChromiumPage(options)
         users[username].retry_time = 10
         users[username].get(url=url)  # Получаем страницу авторизации
@@ -542,8 +542,12 @@ def record_in_date(message, user_data):
                 page_calendar(users[username])  # Переходим на страницу с календарём свободных дат
                 if record_in_first_date(users[username], user_data, message):  # Если первая дата подходит по критериям
                     action_finally(users[username], user_data, message)
+                else:
+                    check_available_date(date_for_users, users[username], user_data, message)
                 if record_in_next_date(users[username], message, user_data):
                     action_finally(users[username], user_data, message)
+                else:
+                    check_available_date(date_for_users, users[username], user_data, message)
     except Exception as error:
         next_step_signal.clear()
         logging.error(f"Ошибка в record_in_date - {error}")
